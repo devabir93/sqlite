@@ -1,9 +1,9 @@
-package ucas.android.sqlite;
+package ucas.android.sqlite.model;
 
 /**
  * Created by abeer on 17,May,2023
  */
-class Student {
+public class Student {
     int id;
     String name;
     String major;
