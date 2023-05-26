@@ -1,10 +1,16 @@
 package ucas.android.sqlite.ui;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.view.MenuProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 
@@ -19,7 +25,7 @@ import ucas.android.sqlite.model.Category;
 import ucas.android.sqlite.model.Product;
 import ucas.android.sqlite.model.Student;
 
-public class MainActivity extends AppCompatActivity implements ProductListener {
+public class MainActivity extends AppCompatActivity implements ProductListener, MenuProvider {
 
     private DBManager db;
     ProductsAdapterReccylerview productsAdapterReccylerview;
@@ -30,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
         super.onCreate(savedInstanceState);
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        addMenuProvider(this);
         db = new DBManager(this);
         db.open();
         for (Category category : Utils.getCategories()) {
@@ -54,5 +61,26 @@ public class MainActivity extends AppCompatActivity implements ProductListener {
 
         Cart cart = new Cart(productId, count);
         db.insert(cart);
+    }
+
+    @Override
+    public void deleteFromCart(int productId, int pos) {
+
+    }
+
+    @Override
+    public void onCreateMenu(@NonNull Menu menu, @NonNull MenuInflater menuInflater) {
+        menuInflater.inflate(R.menu.main_menu,menu);
+    }
+
+    @Override
+    public boolean onMenuItemSelected(@NonNull MenuItem menuItem) {
+        switch (menuItem.getItemId()){
+            case R.id.action_cart: {
+                startActivity(new Intent(getApplicationContext(),CartActivity.class));
+                return true;
+            }
+        }
+        return false;
     }
 }

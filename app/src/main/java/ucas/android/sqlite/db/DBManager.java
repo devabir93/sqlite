@@ -5,6 +5,8 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import androidx.annotation.NonNull;
+
 import java.util.ArrayList;
 
 import ucas.android.sqlite.model.Cart;
@@ -88,16 +90,39 @@ public class DBManager {
         if (cursor != null) {
             cursor.moveToFirst();
             do{
+                Product product = getProduct(cursor);
+                productArrayList.add(product);
+            }while (cursor.moveToNext());
+        }
+        return productArrayList;
+    }
+
+    @NonNull
+    private Product getProduct(Cursor cursor) {
+        int id = cursor.getInt(0);
+        String name = cursor.getString(1);
+        String description = cursor.getString(2);
+        float price = cursor.getFloat(3);
+        int category_id = cursor.getInt(4);
+        Cursor cursorCategory = database.rawQuery("select "+DatabaseHelper.NAME+" from "+DatabaseHelper.TABLE_CATEGORIES +" where "+DatabaseHelper._ID+" = "+category_id,null);
+        cursorCategory.moveToFirst();
+        String categoryName =cursorCategory.getString(0);
+        Product product = new Product(id,name,description,price,categoryName);
+        return product;
+    }
+
+    public ArrayList<Product> fetchCart() {
+        String[] columns = new String[] { DatabaseHelper._ID, DatabaseHelper.QUANTITY};
+        Cursor cursor = database.query(DatabaseHelper.TABLE_CART, columns, null, null, null, null, null);
+        ArrayList<Product> productArrayList = new ArrayList<>();
+        if (cursor != null) {
+            cursor.moveToFirst();
+            do{
                 int id =cursor.getInt(0);
-                String name = cursor.getString(1);
-                String description = cursor.getString(2);
-                float price = cursor.getFloat(3);
-                int category_id = cursor.getInt(4);
-                Cursor cursorCategory = database.
-                        rawQuery("select "+DatabaseHelper.NAME+" from "+DatabaseHelper.TABLE_CATEGORIES +" where "+DatabaseHelper._ID+" = "+category_id,null);
-                cursorCategory.moveToFirst();
-                String categoryName =cursorCategory.getString(0);
-                Product product = new Product(id,name,description,price,categoryName);
+                int quantity = cursor.getInt(1);
+                Cursor cursorProduct = database.rawQuery("select * from "+DatabaseHelper.TABLE_PRODUCTS +" where "+DatabaseHelper._ID+" = "+id,null);
+                Product product = getProduct(cursorProduct);
+                product.setQuantity(quantity);
                 productArrayList.add(product);
             }while (cursor.moveToNext());
         }
@@ -107,7 +132,6 @@ public class DBManager {
     public int update(Student student) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(DatabaseHelper.NAME, student.getName());
-       // contentValues.put(DatabaseHelper.MAJOR, student.major);
         return database.update(DatabaseHelper.TABLE_STUDENTS, contentValues, DatabaseHelper._ID + " = " + student.getId(), null);
     }
 

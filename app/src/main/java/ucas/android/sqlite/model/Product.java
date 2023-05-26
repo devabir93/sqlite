@@ -9,6 +9,7 @@ public class Product {
     String description;
     float price;
     int categoryId;
+    int quantity;
 
     String categoryName;
 
@@ -91,6 +92,14 @@ public class Product {
         this.price = price;
     }
 
+    public int getQuantity() {
+        return quantity;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
@@ -99,6 +108,7 @@ public class Product {
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", categoryId=" + categoryId +
+                ", quantity=" + quantity +
                 ", categoryName='" + categoryName + '\'' +
                 '}';
     }

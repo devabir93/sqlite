@@ -5,4 +5,5 @@ package ucas.android.sqlite;
  */
 public interface ProductListener {
     void onAddToCart(int productId, int count);
+    void deleteFromCart(int productId, int pos);
 }
