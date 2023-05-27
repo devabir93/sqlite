@@ -5,6 +5,7 @@ package ucas.android.sqlite.model;
  */
 public class Product {
     int id;
+    int cartId;
     String name;
     String description;
     float price;
@@ -14,6 +15,14 @@ public class Product {
     String categoryName;
 
     public Product() {
+    }
+
+    public int getCartId() {
+        return cartId;
+    }
+
+    public void setCartId(int cartId) {
+        this.cartId = cartId;
     }
 
     public int getCategoryId() {

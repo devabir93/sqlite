@@ -12,19 +12,27 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 import ucas.android.sqlite.model.Product;
+import ucas.android.sqlite.ui.CartActivity;
 
-public  class ProductsAdapterReccylerview extends RecyclerView.Adapter<ProductsAdapterReccylerview.ProductViewholder> {
+public class ProductsAdapterReccylerview extends RecyclerView.Adapter<ProductsAdapterReccylerview.ProductViewholder> {
     ArrayList<Product> productArrayList;
     ProductListener productListener;
-    public ProductsAdapterReccylerview(ArrayList<Product> productArrayList,ProductListener productListener) {
+    String src;
+
+    public ProductsAdapterReccylerview(String src, ArrayList<Product> productArrayList, ProductListener productListener) {
         this.productArrayList = productArrayList;
         this.productListener = productListener;
+        this.src = src;
     }
 
     @NonNull
     @Override
     public ProductsAdapterReccylerview.ProductViewholder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.list_item_product , parent , false);
+        int resource = R.layout.list_item_product;
+        if(src.equals(CartActivity.class.getSimpleName())){
+            resource= R.layout.list_item_cart;
+        }
+        View view = LayoutInflater.from(parent.getContext()).inflate(resource, parent, false);
         return new ProductViewholder(view);
     }
 
@@ -32,36 +40,51 @@ public  class ProductsAdapterReccylerview extends RecyclerView.Adapter<ProductsA
     public void onBindViewHolder(@NonNull ProductsAdapterReccylerview.ProductViewholder holder, int position) {
 
         Product product = productArrayList.get(holder.getAdapterPosition());
-        if(product==null)
+        if (product == null)
             return;
         holder.nameTv.setText(product.getName());
         holder.descTv.setText(product.getDescription());
-        holder.categoryTv.setText(product.getCategoryName());
-        holder.addToCartBtn.setOnClickListener(new View.OnClickListener() {
+        if(holder.quantityTv!=null)
+            holder.quantityTv.setText(product.getQuantity()+"");
+        if(holder.categoryTv!=null)
+            holder.categoryTv.setText(product.getCategoryName());
+        if(holder.addToCartBtn!=null)
+            holder.addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                productListener.onAddToCart(product.getId(),position+2);
+                productListener.onAddToCart(product.getId(), position + 2);
             }
         });
+
+        if(holder.deleteFromCartBtn!=null)
+            holder.deleteFromCartBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    productListener.deleteFromCart(product.getId(), position);
+                }
+            });
     }
 
     @Override
     public int getItemCount() {
-        if(productArrayList!=null)
+        if (productArrayList != null)
             return productArrayList.size();
         return 0;
     }
 
-    static class ProductViewholder extends RecyclerView.ViewHolder{
+    static class ProductViewholder extends RecyclerView.ViewHolder {
 
-        TextView nameTv , descTv, categoryTv;
-        Button addToCartBtn;
+        TextView nameTv, descTv, categoryTv,quantityTv;
+        Button addToCartBtn,deleteFromCartBtn;
+
         public ProductViewholder(@NonNull View itemView) {
             super(itemView);
             nameTv = itemView.findViewById(R.id.product_name_tv);
             descTv = itemView.findViewById(R.id.product_Desc_tv);
             categoryTv = itemView.findViewById(R.id.product_category_tv);
+            quantityTv = itemView.findViewById(R.id.quantity_value_tv);
             addToCartBtn = itemView.findViewById(R.id.add_to_cart_btn);
+            deleteFromCartBtn = itemView.findViewById(R.id.delete_from_cart_btn);
         }
     }
 }

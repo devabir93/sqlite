@@ -49,9 +49,20 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         initAdapter(productArrayList);
         Log.d(MainActivity.class.getSimpleName(), productArrayList.toString());
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(db!=null)
+            db.close();
+    }
     private void initAdapter(ArrayList<Product> productArrayList) {
-        productsAdapterReccylerview = new ProductsAdapterReccylerview(productArrayList, this);
+        productsAdapterReccylerview = new ProductsAdapterReccylerview(MainActivity.class.getSimpleName(),productArrayList, this);
         binding.productsRv.setAdapter(productsAdapterReccylerview);
         binding.productsRv.setLayoutManager(new LinearLayoutManager(this));
     }
