@@ -32,8 +32,7 @@ public class CartActivity extends AppCompatActivity {
             binding.emptyLayout.container.setVisibility(View.GONE);
             initAdapter(productArrayList);
         }else{
-            binding.productsRv.setVisibility(View.GONE);
-            binding.emptyLayout.container.setVisibility(View.VISIBLE);
+            emptyLayout();
         }
         Log.d(MainActivity.class.getSimpleName(), productArrayList.toString());
     }
@@ -49,7 +48,7 @@ public class CartActivity extends AppCompatActivity {
     private void initAdapter(ArrayList<Product> productArrayList) {
         productsAdapterReccylerview = new ProductsAdapterReccylerview(CartActivity.class.getSimpleName(),productArrayList, new ProductListener() {
             @Override
-            public void onAddToCart(int productId, int count) {
+            public void onAddToCart(int productId, String size, int count) {
 
             }
 
@@ -60,11 +59,19 @@ public class CartActivity extends AppCompatActivity {
                 if(rows > 0 ){
                     productArrayList.remove(pos);
                     productsAdapterReccylerview.notifyItemRemoved(pos);
+                    if(productsAdapterReccylerview.getItemCount()==0){
+                        emptyLayout();
+                    }
                 }
             }
         });
         binding.productsRv.setAdapter(productsAdapterReccylerview);
         binding.productsRv.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void emptyLayout() {
+        binding.productsRv.setVisibility(View.GONE);
+        binding.emptyLayout.container.setVisibility(View.VISIBLE);
     }
 
 }

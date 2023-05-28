@@ -23,7 +23,6 @@ import ucas.android.sqlite.db.DBManager;
 import ucas.android.sqlite.model.Cart;
 import ucas.android.sqlite.model.Category;
 import ucas.android.sqlite.model.Product;
-import ucas.android.sqlite.model.Student;
 
 public class MainActivity extends AppCompatActivity implements ProductListener, MenuProvider {
 
@@ -48,6 +47,8 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
         ArrayList<Product> productArrayList = db.fetchProducts();
         initAdapter(productArrayList);
         Log.d(MainActivity.class.getSimpleName(), productArrayList.toString());
+
+
     }
     @Override
     protected void onResume() {
@@ -68,9 +69,9 @@ public class MainActivity extends AppCompatActivity implements ProductListener, 
     }
 
     @Override
-    public void onAddToCart(int productId, int count) {
+    public void onAddToCart(int productId, String size, int count) {
 
-        Cart cart = new Cart(productId, count);
+        Cart cart = new Cart(productId,size, count);
         db.insert(cart);
     }
 

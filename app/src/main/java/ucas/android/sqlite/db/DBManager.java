@@ -50,6 +50,7 @@ public class DBManager {
         ContentValues contentValue = new ContentValues();
         contentValue.put(DatabaseHelper.PRODUCT_ID, cart.getProductId());
         contentValue.put(DatabaseHelper.QUANTITY, cart.getCount());
+        contentValue.put(DatabaseHelper.SIZE, cart.getSize());
         database.insert(DatabaseHelper.TABLE_CART, null, contentValue);
     }
     public void insert(Category category) {
@@ -112,17 +113,21 @@ public class DBManager {
     }
 
     public ArrayList<Product> fetchCart() {
-        String[] columns = new String[] { DatabaseHelper.PRODUCT_ID, DatabaseHelper.QUANTITY};
+        String[] columns = new String[] {DatabaseHelper._ID, DatabaseHelper.PRODUCT_ID, DatabaseHelper.QUANTITY,DatabaseHelper.SIZE};
         Cursor cursor = database.query(DatabaseHelper.TABLE_CART, columns, null, null, null, null, null);
         ArrayList<Product> productArrayList = new ArrayList<>();
         if (cursor != null && cursor.moveToFirst()) {
             do{
                 int id =cursor.getInt(0);
-                int quantity = cursor.getInt(1);
-                Cursor cursorProduct = database.rawQuery("select * from "+DatabaseHelper.TABLE_PRODUCTS +" where "+DatabaseHelper._ID+" = ?",new String[]{String.valueOf(id)});
+                int productId =cursor.getInt(1);
+                int quantity = cursor.getInt(2);
+                String size = cursor.getString(3);
+                Cursor cursorProduct = database.rawQuery("select * from "+DatabaseHelper.TABLE_PRODUCTS +" where "+DatabaseHelper._ID+" = ?",new String[]{String.valueOf(productId)});
                 cursorProduct.moveToFirst();
                 Product product = getProduct(cursorProduct);
+                product.setCartId(id);
                 product.setQuantity(quantity);
+                product.setSelectSize(size);
                 productArrayList.add(product);
             }while (cursor.moveToNext());
         }
@@ -136,9 +141,8 @@ public class DBManager {
     }
 
     public int deleteFromCart(long id) {
-//        database.execSQL("delete from "+DatabaseHelper.TABLE_CART + " where "+DatabaseHelper.PRODUCT_ID + " = ? ",new String[]{String.valueOf(id)});
-        //int row =database.delete(DatabaseHelper.TABLE_CART, DatabaseHelper.PRODUCT_ID + "= ?" , new String[]{String.valueOf(id)});
-        int row =database.delete(DatabaseHelper.TABLE_CART,null,null);
+        int row =database.delete(DatabaseHelper.TABLE_CART, DatabaseHelper._ID + "= ?" , new String[]{String.valueOf(id)});
+//        int row =database.delete(DatabaseHelper.TABLE_CART,null,null);
         //database.close();
         return row;
     }

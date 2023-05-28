@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -48,11 +49,13 @@ public class ProductsAdapterReccylerview extends RecyclerView.Adapter<ProductsAd
             holder.quantityTv.setText(product.getQuantity()+"");
         if(holder.categoryTv!=null)
             holder.categoryTv.setText(product.getCategoryName());
+        if(holder.sizeTv!=null)
+            holder.sizeTv.setText(product.getSelectSize());
         if(holder.addToCartBtn!=null)
             holder.addToCartBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                productListener.onAddToCart(product.getId(), position + 2);
+                productListener.onAddToCart(product.getId(),(String)holder.spinner.getSelectedItem(), position + 2);
             }
         });
 
@@ -60,7 +63,7 @@ public class ProductsAdapterReccylerview extends RecyclerView.Adapter<ProductsAd
             holder.deleteFromCartBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    productListener.deleteFromCart(product.getId(), position);
+                    productListener.deleteFromCart(product.getCartId(), holder.getAdapterPosition());
                 }
             });
     }
@@ -74,15 +77,18 @@ public class ProductsAdapterReccylerview extends RecyclerView.Adapter<ProductsAd
 
     static class ProductViewholder extends RecyclerView.ViewHolder {
 
-        TextView nameTv, descTv, categoryTv,quantityTv;
+        TextView nameTv, descTv, categoryTv,quantityTv,sizeTv;
         Button addToCartBtn,deleteFromCartBtn;
+        Spinner spinner;
 
         public ProductViewholder(@NonNull View itemView) {
             super(itemView);
+            spinner = itemView.findViewById(R.id.size_spinner);
             nameTv = itemView.findViewById(R.id.product_name_tv);
             descTv = itemView.findViewById(R.id.product_Desc_tv);
             categoryTv = itemView.findViewById(R.id.product_category_tv);
             quantityTv = itemView.findViewById(R.id.quantity_value_tv);
+            sizeTv = itemView.findViewById(R.id.size_value_tv);
             addToCartBtn = itemView.findViewById(R.id.add_to_cart_btn);
             deleteFromCartBtn = itemView.findViewById(R.id.delete_from_cart_btn);
         }

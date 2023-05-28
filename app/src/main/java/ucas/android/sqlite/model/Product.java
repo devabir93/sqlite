@@ -13,6 +13,7 @@ public class Product {
     int quantity;
 
     String categoryName;
+    private String selectSize;
 
     public Product() {
     }
@@ -120,5 +121,13 @@ public class Product {
                 ", quantity=" + quantity +
                 ", categoryName='" + categoryName + '\'' +
                 '}';
+    }
+
+    public void setSelectSize(String selectSize) {
+        this.selectSize = selectSize;
+    }
+
+    public String getSelectSize() {
+        return selectSize;
     }
 }

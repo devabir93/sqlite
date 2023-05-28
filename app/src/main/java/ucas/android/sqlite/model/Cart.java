@@ -5,9 +5,19 @@ package ucas.android.sqlite.model;
  */
 public class Cart {
     int productId; int count;
-    public Cart(int productId, int count) {
+    String size;
+    public Cart(int productId,String size, int count) {
         this.productId=productId;
         this.count=count;
+        this.size=size;
+    }
+
+    public String getSize() {
+        return size;
+    }
+
+    public void setSize(String size) {
+        this.size = size;
     }
 
     public int getProductId() {

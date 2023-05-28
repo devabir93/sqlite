@@ -27,12 +27,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DESCRIPTION = "description";
     public static final String CATEGORY_ID = "category_id";
     public static final String PRICE = "price";
+    public static final String SIZE = "size";
 
     // Database Information
     static final String DB_NAME = "STUDENTS.DB";
 
     // database version
-    static final int DB_VERSION = 4;
+    static final int DB_VERSION = 6;
 
     // Creating table query
     private static final String CREATE_TABLE_STUDENTS = "create table if not exists" + TABLE_STUDENTS + "(" + _ID
@@ -44,7 +45,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + NAME + " TEXT NOT NULL);";
 
     private static final String CREATE_TABLE_CART = "create table if not exists " + TABLE_CART + "(" + _ID
-            + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + PRODUCT_ID + " INTEGER ," + QUANTITY+" INTEGER,"+
+            + " INTEGER PRIMARY KEY ON CONFLICT REPLACE, " + PRODUCT_ID + " INTEGER ,"
+            + QUANTITY+" INTEGER,"
+            + SIZE+" TEXT,"+
             " foreign key ("+PRODUCT_ID+") references "+TABLE_PRODUCTS
             +" ("+_ID+"));";
 
